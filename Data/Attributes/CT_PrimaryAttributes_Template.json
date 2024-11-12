@@ -1,0 +1,37 @@
+[
+	{
+		"Name": "Attributes.Primary.Strength",
+		"1": 1,
+		"50": 50
+	},
+	{
+		"Name": "Attributes.Primary.Agility",
+		"1": 1,
+		"50": 50
+	},
+	{
+		"Name": "Attributes.Primary.Resilience",
+		"1": 1,
+		"50": 50
+	},
+	{
+		"Name": "Attributes.Primary.Spirit",
+		"1": 1,
+		"50": 50
+	},
+	{
+		"Name": "Attributes.Primary.Intelligence",
+		"1": 1,
+		"50": 50
+	},
+	{
+		"Name": "Attributes.Primary.Vitality",
+		"1": 1,
+		"50": 50
+	},
+	{
+		"Name": "Attributes.Primary.Luck",
+		"1": 1,
+		"50": 50
+	}
+]
