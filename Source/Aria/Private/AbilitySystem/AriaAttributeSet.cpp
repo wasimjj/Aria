@@ -865,67 +865,78 @@ void UAriaAttributeSet::HandleStatusEffect(const FEffectProperties& EffectProps)
 		EffectProps.EffectContextHandle);
 
 	// Dynamically create the Status Effect Gameplay Effect (GE)
-	const FString StatusEffectName = FString::Printf(
+	
+	
+	if(!StatusEffectType.GetTagName().ToString().Contains(TEXT("None")))
+	{
+		const FString StatusEffectName = FString::Printf(
 		TEXT("Dynamic Status Effect (GE): %s"), *StatusEffectType.GetTagName().ToString());
-	UGameplayEffect* Effect = NewObject<UGameplayEffect>(GetTransientPackage(), FName(StatusEffectName));
+		GLog->Log(FString::Printf(TEXT("StatusEffect:::::: %s"), *StatusEffectName));
 
-	// Configures the Duration Policy
-	Effect->DurationPolicy = EGameplayEffectDurationType::HasDuration;
-	Effect->DurationMagnitude = FScalableFloat(StatusEffectDuration);
-	Effect->Period = StatusEffectFrequency;
-	Effect->bExecutePeriodicEffectOnApplication = false; // TODO: Change to use an AbilityModifier property.
+		if(UGameplayEffect* Effect = NewObject<UGameplayEffect>(GetTransientPackage(), FName(StatusEffectName)))
+		{
+				// Configures the Duration Policy
+		Effect->DurationPolicy = EGameplayEffectDurationType::HasDuration;
+		Effect->DurationMagnitude = FScalableFloat(StatusEffectDuration);
+		Effect->Period = StatusEffectFrequency;
+		Effect->bExecutePeriodicEffectOnApplication = false; // TODO: Change to use an AbilityModifier property.
 
-	// Configures any Tags (i.e. Granting Status Effect Tags)
+		// Configures any Tags (i.e. Granting Status Effect Tags)
 #pragma region GrantTags
-	FInheritedTagContainer TagContainer = FInheritedTagContainer();
-	UTargetTagsGameplayEffectComponent& Component = Effect->FindOrAddComponent<UTargetTagsGameplayEffectComponent>();
-	TagContainer.Added.AddTag(StatusEffectType);
+		FInheritedTagContainer TagContainer = FInheritedTagContainer();
+		UTargetTagsGameplayEffectComponent& Component = Effect->FindOrAddComponent<UTargetTagsGameplayEffectComponent>();
+		TagContainer.Added.AddTag(StatusEffectType);
 	
-	// Handle the Stun Status Effect
-	//  Blocks all Player Input
-	if (StatusEffectType.MatchesTagExact(GameplayTags.StatusEffect_Negative_Stun))
-	{
-		TagContainer.Added.AddTag(GameplayTags.Player_Block_InputPressed);
-		TagContainer.Added.AddTag(GameplayTags.Player_Block_InputHeld);
-		TagContainer.Added.AddTag(GameplayTags.Player_Block_InputReleased);
-		TagContainer.Added.AddTag(GameplayTags.Player_Block_CursorTrace);
-	}
+		// Handle the Stun Status Effect
+		//  Blocks all Player Input
+		if (StatusEffectType.MatchesTagExact(GameplayTags.StatusEffect_Negative_Stun))
+		{
+			TagContainer.Added.AddTag(GameplayTags.Player_Block_InputPressed);
+			TagContainer.Added.AddTag(GameplayTags.Player_Block_InputHeld);
+			TagContainer.Added.AddTag(GameplayTags.Player_Block_InputReleased);
+			TagContainer.Added.AddTag(GameplayTags.Player_Block_CursorTrace);
+		}
 	
-	Component.SetAndApplyTargetTagChanges(TagContainer);
+		Component.SetAndApplyTargetTagChanges(TagContainer);
 #pragma endregion
 	
-	// Configures Effect Stacking 
-	Effect->StackingType = EGameplayEffectStackingType::AggregateBySource;
-	Effect->StackLimitCount = 1;
+		// Configures Effect Stacking 
+		Effect->StackingType = EGameplayEffectStackingType::AggregateBySource;
+		Effect->StackLimitCount = 1;
 
-	// Configures any Modifiers
-	int32 ModIndex = Effect->Modifiers.Num();
+		// Configures any Modifiers
+		int32 ModIndex = Effect->Modifiers.Num();
 
-	// Damaged Attribute Modifier
-	if (DamagedAttributeType.IsValid() && DamagedAttributeAmount > 0.f)
-	{
-		Effect->Modifiers.Add(FGameplayModifierInfo());
-		FGameplayModifierInfo& ModifierInfo = Effect->Modifiers[ModIndex];
-		ModifierInfo.Attribute = UAriaAbilitySystemLibrary::GetAttributeByTag(TagsToAttributes, DamagedAttributeType);
-		ModifierInfo.ModifierOp = EGameplayModOp::Additive;
-		ModifierInfo.ModifierMagnitude = FScalableFloat(DamagedAttributeAmount);
+		// Damaged Attribute Modifier
+		if (DamagedAttributeType.IsValid() && DamagedAttributeAmount > 0.f)
+		{
+			Effect->Modifiers.Add(FGameplayModifierInfo());
+			FGameplayModifierInfo& ModifierInfo = Effect->Modifiers[ModIndex];
+			ModifierInfo.Attribute = UAriaAbilitySystemLibrary::GetAttributeByTag(TagsToAttributes, DamagedAttributeType);
+			ModifierInfo.ModifierOp = EGameplayModOp::Additive;
+			ModifierInfo.ModifierMagnitude = FScalableFloat(DamagedAttributeAmount);
 		
-		// Note: To add additional Modifiers; just ++Index and repeat the above for Adding another Modifier
-	}
+			// Note: To add additional Modifiers; just ++Index and repeat the above for Adding another Modifier
+		}
 
-	// Note: All Status Effects have just a default level so their settings don't really change
-	//  TODO: Make it where all Status Effects can have different Levels and Modifiers via Curve Tables
-	if (FGameplayEffectSpec* MutableSpec = new FGameplayEffectSpec(Effect, EffectContext, 1.f))
-	{
-		FAriaGameplayEffectContext* AriaContext = static_cast<FAriaGameplayEffectContext*>(EffectContext.Get());
-		const TSharedPtr<FGameplayTag> StatEffectType = MakeShareable(new FGameplayTag(StatusEffectType));
-		AriaContext->SetStatusEffectType(StatEffectType);
-#pragma endregion
+		/*// Note: All Status Effects have just a default level so their settings don't really change
+		//  TODO: Make it where all Status Effects can have different Levels and Modifiers via Curve Tables
+			if (FGameplayEffectSpec* MutableSpec = new FGameplayEffectSpec(Effect, EffectContext, 1.f))
+			{
+				FAriaGameplayEffectContext* AriaContext = static_cast<FAriaGameplayEffectContext*>(EffectContext.Get());
+				//const TSharedPtr<FGameplayTag> StatEffectType = MakeShareable(new FGameplayTag(StatusEffectType));
+				AriaContext->SetStatusEffectType(StatusEffectType);
+	#pragma endregion
 
-		// Apply the Status Effect Gameplay Effect (GE)
-		EffectProps.TargetAsc->ApplyGameplayEffectSpecToSelf(*MutableSpec);
+				// Apply the Status Effect Gameplay Effect (GE)
+				EffectProps.TargetAsc->ApplyGameplayEffectSpecToSelf(*MutableSpec);
+			}*/
+		}
+
+	
 	}
 }
+
 #pragma endregion
 
 /* Handle Incoming XP */

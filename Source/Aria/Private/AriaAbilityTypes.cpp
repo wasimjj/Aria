@@ -206,10 +206,10 @@ bool FAriaGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 		{
 			if (!DamageType.IsValid())
 			{
-				DamageType = MakeShared<FGameplayTag>();
+				DamageType = FGameplayTag();
 			}
 		}
-		DamageType->NetSerialize(Ar, Map, bOutSuccess);
+		DamageType.NetSerialize(Ar, Map, bOutSuccess);
 	}
 	if (RepBits & (1 << 11))
 	{
@@ -229,10 +229,10 @@ bool FAriaGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 		{
 			if (!StatusEffectType.IsValid())
 			{
-				StatusEffectType = MakeShared<FGameplayTag>();
+				StatusEffectType = FGameplayTag();
 			}
 		}
-		StatusEffectType->NetSerialize(Ar, Map, bOutSuccess);
+		StatusEffectType.NetSerialize(Ar, Map, bOutSuccess);
 	}
 	if (RepBits & (1 << 15))
 	{
@@ -248,10 +248,10 @@ bool FAriaGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 		{
 			if (!DamagedAttributeType.IsValid())
 			{
-				DamagedAttributeType = MakeShared<FGameplayTag>();
+				DamagedAttributeType = FGameplayTag();
 			}
 		}
-		DamagedAttributeType->NetSerialize(Ar, Map, bOutSuccess);
+		DamagedAttributeType.NetSerialize(Ar, Map, bOutSuccess);
 	}
 	if (RepBits & (1 << 18))
 	{

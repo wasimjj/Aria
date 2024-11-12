@@ -59,7 +59,10 @@ public:
     // Setters for the Status Effect Context
 	/* Status Effect Core Properties */
 	void SetIsStatusEffectApplied(const bool bInIsStatusEffectApplied) { bIsStatusEffectApplied = bInIsStatusEffectApplied; }
-	void SetStatusEffectType(const TSharedPtr<FGameplayTag>& InStatusEffectType) { StatusEffectType = InStatusEffectType; }
+	void SetStatusEffectType(const TSharedPtr<FGameplayTag>& InStatusEffectType)
+    {
+	    StatusEffectType = InStatusEffectType;
+    }
 	void SetStatusEffectDuration(const float InStatusEffectDuration) { StatusEffectDuration = InStatusEffectDuration; }
 	void SetStatusEffectFrequency(const float InStatusEffectFrequency) { StatusEffectFrequency = InStatusEffectFrequency; }
 	/* Status Effect Damage */

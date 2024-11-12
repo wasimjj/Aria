@@ -254,7 +254,7 @@ FGameplayTag UAriaAbilitySystemLibrary::GetDamageType(const FGameplayEffectConte
 	{
 		if (AriaEffectContext->GetDamageType().IsValid())
 		{
-			return *AriaEffectContext->GetDamageType();
+			return AriaEffectContext->GetDamageType();
 		}
 	}
 	return FGameplayTag();
@@ -266,8 +266,8 @@ void UAriaAbilitySystemLibrary::SetDamageType(FGameplayEffectContextHandle& Effe
 	if (FAriaGameplayEffectContext* AriaEffectContext = static_cast<FAriaGameplayEffectContext*>(EffectContextHandle.
 		Get()))
 	{
-		const TSharedPtr<FGameplayTag> DamageType = MakeShared<FGameplayTag>(InDamageType);
-		AriaEffectContext->SetDamageType(DamageType);
+		//const TSharedPtr<FGameplayTag> DamageType = MakeShared<FGameplayTag>(InDamageType);
+		AriaEffectContext->SetDamageType(InDamageType);
 	}
 }
 
@@ -342,7 +342,7 @@ FGameplayTag UAriaAbilitySystemLibrary::GetStatusEffectType(const FGameplayEffec
 	{
 		if (AriaEffectContext->GetStatusEffectType().IsValid())
 		{
-			return *AriaEffectContext->GetStatusEffectType();
+			return AriaEffectContext->GetStatusEffectType();
 		}
 	}
 	return FGameplayTag();
@@ -354,8 +354,10 @@ void UAriaAbilitySystemLibrary::SetStatusEffectType(FGameplayEffectContextHandle
 	if (FAriaGameplayEffectContext* AriaEffectContext = static_cast<FAriaGameplayEffectContext*>(EffectContextHandle.
 		Get()))
 	{
-		const TSharedPtr<FGameplayTag> StatusEffectType = MakeShared<FGameplayTag>(InStatusEffectType);
-		AriaEffectContext->SetStatusEffectType(StatusEffectType);
+		
+		//const TSharedPtr<FGameplayTag> StatusEffectType = MakeShared<FGameplayTag>(InStatusEffectType);
+		AriaEffectContext->SetStatusEffectType(InStatusEffectType);
+		
 	}
 }
 
@@ -406,7 +408,7 @@ FGameplayTag UAriaAbilitySystemLibrary::GetDamagedAttributeType(const FGameplayE
 	{
 		if (AriaEffectContext->GetDamagedAttributeType().IsValid())
 		{
-			return *AriaEffectContext->GetDamagedAttributeType();
+			return AriaEffectContext->GetDamagedAttributeType();
 		}
 	}
 	return FGameplayTag();
@@ -418,8 +420,8 @@ void UAriaAbilitySystemLibrary::SetDamagedAttributeType(FGameplayEffectContextHa
 	if (FAriaGameplayEffectContext* AriaEffectContext = static_cast<FAriaGameplayEffectContext*>(EffectContextHandle.
 		Get()))
 	{
-		const TSharedPtr<FGameplayTag> DamagedAttributeType = MakeShared<FGameplayTag>(InDamagedAttributeType);
-		AriaEffectContext->SetDamagedAttributeType(DamagedAttributeType);
+		//const TSharedPtr<FGameplayTag> DamagedAttributeType = MakeShared<FGameplayTag>(InDamagedAttributeType);
+		AriaEffectContext->SetDamagedAttributeType(InDamagedAttributeType);
 	}
 }
 
@@ -1770,7 +1772,6 @@ FGameplayEffectContextHandle UAriaAbilitySystemLibrary::ApplyDamageEffect(const 
 	const FAriaGameplayTags& GameplayTags = FAriaGameplayTags::Get();
 
 	const AActor* SourceAvatarActor = DamageEffectParams.SourceAsc->GetAvatarActor();
-
 	FGameplayEffectContextHandle EffectContextHandle = DamageEffectParams.SourceAsc->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(SourceAvatarActor);
 

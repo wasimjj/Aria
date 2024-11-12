@@ -174,14 +174,17 @@ public:
 	bool IsDodgedHit() const { return bIsDodgedHit; }
 	bool IsBlockedHit() const { return bIsBlockedHit; }
 	bool IsCriticalHit() const { return bIsCriticalHit; }
-	TSharedPtr<FGameplayTag> GetDamageType() const { return DamageType; }
+	FGameplayTag GetDamageType() const { return DamageType; }
 	FVector GetKnockbackForce() const { return KnockbackForce; }
 	FVector GetDeathImpulse() const { return DeathImpulse; }
 	bool IsStatusEffectApplied() const { return bIsStatusEffectApplied; }
-	TSharedPtr<FGameplayTag> GetStatusEffectType() const { return StatusEffectType; }
+	FGameplayTag GetStatusEffectType() const
+	{
+		return StatusEffectType;
+	}
 	float GetStatusEffectDuration() const { return StatusEffectDuration; }
 	float GetStatusEffectFrequency() const { return StatusEffectFrequency; }
-	TSharedPtr<FGameplayTag> GetDamagedAttributeType() const { return DamagedAttributeType; }
+	FGameplayTag GetDamagedAttributeType() const { return DamagedAttributeType; }
 	float GetDamagedAttributeAmount() const { return DamagedAttributeAmount; }
 	EAdditionalDamageTriggers GetAdditionalDamageTrigger() const { return AdditionalDamageTrigger; }
 	float GetAdditionalDamageAmount() const { return AdditionalDamageAmount; }
@@ -201,7 +204,7 @@ public:
 	void SetIsDodgedHit(const bool bInIsDodgedHit) { bIsDodgedHit = bInIsDodgedHit; }
 	void SetIsBlockedHit(const bool bInIsBlockedHit) { bIsBlockedHit = bInIsBlockedHit; }
 	void SetIsCriticalHit(const bool bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
-	void SetDamageType(const TSharedPtr<FGameplayTag>& InDamageType) { DamageType = InDamageType; }
+	void SetDamageType(const FGameplayTag InDamageType) { DamageType = InDamageType; }
 	void SetKnockbackForce(const FVector& InKnockbackForce) { KnockbackForce = InKnockbackForce; }
 	void SetDeathImpulse(const FVector& InDeathImpulse) { DeathImpulse = InDeathImpulse; }
 
@@ -210,7 +213,7 @@ public:
 		bIsStatusEffectApplied = bInIsStatusEffectApplied;
 	}
 
-	void SetStatusEffectType(const TSharedPtr<FGameplayTag>& InStatusEffectType)
+	void SetStatusEffectType(const FGameplayTag InStatusEffectType)
 	{
 		StatusEffectType = InStatusEffectType;
 	}
@@ -222,7 +225,7 @@ public:
 		StatusEffectFrequency = InStatusEffectFrequency;
 	}
 
-	void SetDamagedAttributeType(const TSharedPtr<FGameplayTag>& InDamagedAttributeType)
+	void SetDamagedAttributeType(FGameplayTag InDamagedAttributeType)
 	{
 		DamagedAttributeType = InDamagedAttributeType;
 	}
@@ -302,7 +305,7 @@ protected:
 	/* Damage */
 
 	// Does not need a UPROPERTY(); cleanup is already handled by the memory manager
-	TSharedPtr<FGameplayTag> DamageType;
+	FGameplayTag DamageType;
 
 	/* Knockbacks */
 
@@ -317,7 +320,8 @@ protected:
 	UPROPERTY()
 	bool bIsStatusEffectApplied = false;
 
-	TSharedPtr<FGameplayTag> StatusEffectType;
+	UPROPERTY()
+	FGameplayTag StatusEffectType;
 
 	UPROPERTY()
 	float StatusEffectDuration = 0.f;
@@ -325,7 +329,7 @@ protected:
 	UPROPERTY()
 	float StatusEffectFrequency = 0.f;
 
-	TSharedPtr<FGameplayTag> DamagedAttributeType;
+	FGameplayTag DamagedAttributeType;
 
 	UPROPERTY()
 	float DamagedAttributeAmount = 0.f;
